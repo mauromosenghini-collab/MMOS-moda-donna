@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ordine creato{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+    <h1 class="mt-3">Ordine creato con successo!</h1>
+    <p class="lead">Grazie per il tuo ordine. Il numero dell'ordine è <strong>#{{ order.id }}</strong>.</p>
+    <p>Ti invieremo una email di conferma a <strong>{{ order.email }}</strong>.</p>
+    <div class="mt-4">
+        <a href="{% url 'shop:order_detail' order.id %}" class="btn btn-primary">
+            <i class="bi bi-eye"></i> Visualizza ordine
+        </a>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-shop"></i> Continua lo shopping
+        </a>
+    </div>
+</div>
+{% endblock %}

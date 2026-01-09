@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}I miei ordini{% endblock %}
+
+{% block content %}
+<h1>I miei ordini</h1>
+{% if orders %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID Ordine</th>
+                    <th>Data</th>
+                    <th>Totale</th>
+                    <th>Stato</th>
+                    <th>Pagato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.created|date:"d/m/Y H:i" }}</td>
+                        <td>{{ order.get_total_cost }} €</td>
+                        <td>
+                            <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if order.paid %}
+                                <span class="badge bg-success">Sì</span>
+                            {% else %}
+                                <span class="badge bg-danger">No</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'shop:order_detail' order.id %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Dettagli
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox" style="font-size: 5rem; color: #ccc;"></i>
+        <p class="text-muted mt-3">Non hai ancora effettuato ordini.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">
+            <i class="bi bi-shop"></i> Vai allo shop
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

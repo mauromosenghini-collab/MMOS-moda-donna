@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ordine #{{ order.id }}{% endblock %}
+
+{% block content %}
+<h1>Ordine #{{ order.id }}</h1>
+<div class="row">
+    <div class="col-md-8">
+        <h3>Articoli</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Prodotto</th>
+                        <th>Prezzo</th>
+                        <th>Quantità</th>
+                        <th>Totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.price }} €</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.get_cost }} €</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3"><strong>Totale</strong></td>
+                        <td><strong>{{ order.get_total_cost }} €</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h3>Dettagli spedizione</h3>
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Nome:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+                <p><strong>Email:</strong> {{ order.email }}</p>
+                <p><strong>Indirizzo:</strong> {{ order.address }}</p>
+                <p><strong>CAP:</strong> {{ order.postal_code }}</p>
+                <p><strong>Città:</strong> {{ order.city }}</p>
+                <hr>
+                <p><strong>Stato:</strong> 
+                    <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                </p>
+                <p><strong>Pagato:</strong> 
+                    {% if order.paid %}
+                        <span class="badge bg-success">Sì</span>
+                    {% else %}
+                        <span class="badge bg-danger">No</span>
+                    {% endif %}
+                </p>
+                <p><strong>Data ordine:</strong> {{ order.created|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+        <a href="{% url 'shop:order_list' %}" class="btn btn-outline-secondary mt-3">
+            <i class="bi bi-arrow-left"></i> Torna agli ordini
+        </a>
+    </div>
+</div>
+{% endblock %}
