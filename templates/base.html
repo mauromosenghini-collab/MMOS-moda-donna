@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} {# Carica il tag per gestire i file statici come CSS e immagini #}
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}MMOS Moda Donna{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">-->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -21,14 +21,15 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'shop:product_list' %}">Prodotti</a>
+                        <a class="nav-link" href="{% url 'shop:product_list' %}">Vetrina</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'shop:cart_detail' %}">
                             <i class="bi bi-cart"></i> Carrello
-                            {% if cart|length > 0 %}
+                            {% if cart %}  {#if cart|length > 0#}
+                            {# Mostra il numero di articoli solo se il carrello non è vuoto #}
                                 <span class="badge bg-primary">{{ cart|length }}</span>
                             {% endif %}
                         </a>
@@ -63,7 +64,7 @@
                 </div>
             {% endfor %}
         {% endif %}
-
+{# Questo blocco verrà riempito dal contenuto specifico delle altre pagine (list.html, detail.html, ecc.) #}
         {% block content %}
         {% endblock %}
     </main>
@@ -77,3 +78,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

@@ -1,0 +1,25 @@
+/* Ripristina il layout dei filtri a destra */
+#changelist-filter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    width: 240px;
+    background: #f8f8f8;
+}
+
+#changelist {
+    margin-right: 280px;
+}
+
+@media (max-width: 768px) {
+    #changelist-filter {
+        position: static;
+        width: auto;
+        margin-right: 0;
+    }
+    
+    #changelist {
+        margin-right: 0;
+    }
+}

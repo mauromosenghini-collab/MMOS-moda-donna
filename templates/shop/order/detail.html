@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{# Titolo dinamico con il numero identificativo dell'ordine #}
 {% block title %}Ordine #{{ order.id }}{% endblock %}
 
 {% block content %}
@@ -19,6 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {# Cicla su tutti gli articoli legati a questo ordine (OrderItems) #}
                     {% for item in order.items.all %}
                         <tr>
                             <td>{{ item.product.name }}</td>
@@ -31,6 +32,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3"><strong>Totale</strong></td>
+                        {# Richiama il calcolo totale complessivo dell'ordine #}
                         <td><strong>{{ order.get_total_cost }} €</strong></td>
                     </tr>
                 </tfoot>
@@ -47,8 +49,10 @@
                 <p><strong>CAP:</strong> {{ order.postal_code }}</p>
                 <p><strong>Città:</strong> {{ order.city }}</p>
                 <hr>
+                {# GESTIONE DINAMICA DELLE ETICHETTE (BADGES) #}
                 <p><strong>Stato:</strong> 
                     <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                        {# get_status_display mostra l'etichetta leggibile (es. "Inviato") invece del codice database #}
                         {{ order.get_status_display }}
                     </span>
                 </p>
@@ -59,9 +63,17 @@
                         <span class="badge bg-danger">No</span>
                     {% endif %}
                 </p>
+                <p><strong>Metodo di pagamento:</strong> 
+                    {% if order.payment_method == 'card' %}
+                        <span class="badge bg-info">Con carta</span>
+                    {% else %}
+                        <span class="badge bg-warning">Alla consegna</span>
+                    {% endif %}
+                </p>
                 <p><strong>Data ordine:</strong> {{ order.created|date:"d/m/Y H:i" }}</p>
             </div>
         </div>
+        {# Pulsante per tornare alla lista storica di tutti gli ordini dell'utente #}
         <a href="{% url 'shop:order_list' %}" class="btn btn-outline-secondary mt-3">
             <i class="bi bi-arrow-left"></i> Torna agli ordini
         </a>

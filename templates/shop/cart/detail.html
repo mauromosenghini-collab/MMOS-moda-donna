@@ -8,13 +8,14 @@
     <div class="col-12">
         <h1 class="mb-4">
             <i class="bi bi-cart"></i> Il tuo carrello
+            {# Verifica se ci sono articoli per mostrare il numero totale nel titolo #}
             {% if cart|length > 0 %}
                 <span class="badge bg-primary ms-2">{{ cart|length }} articolo{{ cart|length|pluralize }}</span>
             {% endif %}
         </h1>
     </div>
 </div>
-
+{# Se il carrello contiene almeno un prodotto, mostra la tabella e il riepilogo #}
 {% if cart|length > 0 %}
     <div class="row">
         <div class="col-lg-8">
@@ -32,10 +33,12 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {# Cicla su ogni elemento del carrello (gestito dal metodo __iter__ in cart.py) #}
                                 {% for item in cart %}
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
+                                                {# Gestione immagine prodotto o segnaposto se assente #}
                                                 {% if item.product.image %}
                                                     <img src="{{ item.product.image.url }}" 
                                                          alt="{{ item.product.name }}" 
@@ -52,6 +55,7 @@
                                                        class="text-decoration-none fw-bold text-dark">
                                                         {{ item.product.name }}
                                                     </a>
+                                                    {# Avviso visivo se le scorte in magazzino sono basse #}
                                                     {% if item.product.stock < 10 %}
                                                         <br><small class="text-warning">
                                                             <i class="bi bi-exclamation-triangle"></i> 
@@ -65,6 +69,7 @@
                                             <span class="fw-semibold">{{ item.price|floatformat:2 }} €</span>
                                         </td>
                                         <td>
+                                            {# Form rapido per aggiornare la quantità direttamente dalla tabella #}
                                             <form action="{% url 'shop:cart_add' item.product.id %}" 
                                                   method="post" 
                                                   class="d-flex align-items-center gap-2">
@@ -77,6 +82,7 @@
                                                        class="form-control form-control-sm" 
                                                        style="width: 80px;"
                                                        required>
+                                                {# override=True dice alla view di sostituire la quantità invece di sommarla #}
                                                 <input type="hidden" name="override" value="True">
                                                 <button type="submit" 
                                                         class="btn btn-sm btn-outline-primary" 
@@ -89,9 +95,11 @@
                                             </small>
                                         </td>
                                         <td>
+                                            {# Calcolato dinamicamente tramite il metodo __iter__ nel file cart.py #}
                                             <span class="fw-bold text-primary">{{ item.total_price|floatformat:2 }} €</span>
                                         </td>
                                         <td>
+                                            {# Pulsante per rimuovere completamente la riga dal carrello #}
                                             <form action="{% url 'shop:cart_remove' item.product.id %}" 
                                                   method="post" 
                                                   class="d-inline">
@@ -114,6 +122,7 @@
         </div>
         
         <div class="col-lg-4 mt-4 mt-lg-0">
+            {# La classe sticky-top mantiene il riepilogo visibile mentre scorri la tabella lunga #}
             <div class="card shadow-sm sticky-top" style="top: 20px;">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
@@ -131,6 +140,7 @@
                         <span class="fs-4 fw-bold text-primary">{{ cart.get_total_price|floatformat:2 }} €</span>
                     </div>
                     <div class="d-grid gap-2">
+                        {# Link alla vista di creazione ordine per completare l'acquisto #}
                         <a href="{% url 'shop:order_create' %}" class="btn btn-primary btn-lg">
                             <i class="bi bi-cart-check"></i> Procedi al checkout
                         </a>
@@ -142,6 +152,7 @@
             </div>
         </div>
     </div>
+{# Se il carrello è vuoto, mostra un messaggio di cortesia e un pulsante per tornare allo shop #}   
 {% else %}
     <div class="text-center py-5">
         <div class="card shadow-sm border-0">

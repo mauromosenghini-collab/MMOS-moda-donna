@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
-
-{% block title %}Prodotti{% endblock %}
+{# Imposta il titolo della pagina in base alla categoria selezionata o "Vetrina" di default #}
+{% block title %}Vetrina{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-3">
         <h3>Categorie</h3>
         <ul class="list-group">
+            {# Link per mostrare tutti i prodotti di ogni occasione/categoria #}
             <li class="list-group-item">
                 <a href="{% url 'shop:product_list' %}" class="text-decoration-none">
-                    Tutti i prodotti
+                    Per ogni occasione
                 </a>
             </li>
+            {# Ciclo sulle categorie passate dalla View per creare il menu laterale #}
             {% for c in categories %}
                 <li class="list-group-item {% if category.slug == c.slug %}active{% endif %}">
                     <a href="{{ c.get_absolute_url }}" class="text-decoration-none">
@@ -23,31 +25,39 @@
         </ul>
     </div>
     <div class="col-md-9">
-        <h1>{% if category %}{{ category.name }}{% else %}Prodotti{% endif %}</h1>
+        {# Titolo dinamico: mostra il nome della categoria se filtrata, altrimenti "Vetrina" #}
+        <h1>{% if category %}{{ category.name }}{% else %}Vetrina{% endif %}</h1>
         <div class="row">
+            {# Cicla sulla lista di prodotti filtrati #}
             {% for product in products %}
                 <div class="col-md-4 mb-4">
+                    {# La classe h-100 assicura che tutte le card abbiano la stessa altezza nella riga #}
                     <div class="card h-100 shadow-sm">
                         <a href="{{ product.get_absolute_url }}">
                             {% if product.image %}
+                            {# object-fit: cover evita che le immagini vengano deformate se hanno proporzioni diverse #}
                                 <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
                             {% else %}
+                            {# Placeholder se il prodotto non ha un'immagine caricata #}
                                 <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
                                     <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
                                 </div>
                             {% endif %}
                         </a>
+                        {# Il body della card usa flexbox per spingere il prezzo e il bottone sempre in fondo #}
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">
                                 <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark">
                                     {{ product.name }}
                                 </a>
                             </h5>
+                            {# truncatewords limita la descrizione per non sballare il layout della card #}
                             <p class="card-text text-muted">{{ product.description|truncatewords:15 }}</p>
                             <div class="mt-auto">
                                 <p class="card-text">
                                     <strong class="text-primary fs-4">{{ product.price }} €</strong>
                                 </p>
+                                {# Controlla disponibilità e stock prima di mostrare il tasto Dettagli #}
                                 {% if product.available and product.stock > 0 %}
                                     <a href="{{ product.get_absolute_url }}" class="btn btn-primary w-100">
                                         <i class="bi bi-eye"></i> Dettagli
@@ -61,6 +71,7 @@
                         </div>
                     </div>
                 </div>
+                {# Se il database è vuoto o la categoria non ha prodotti, mostra questo messaggio #}
             {% empty %}
                 <div class="col-12">
                     <p class="text-center text-muted">Nessun prodotto disponibile.</p>

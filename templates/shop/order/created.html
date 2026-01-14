@@ -5,14 +5,42 @@
 
 {% block content %}
 <div class="text-center py-5">
+    {# Icona di successo verde gigante per dare un feedback visivo immediato #}
     <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
     <h1 class="mt-3">Ordine creato con successo!</h1>
+    {# Mostra l'ID dell'ordine appena salvato nel database #}
     <p class="lead">Grazie per il tuo ordine. Il numero dell'ordine è <strong>#{{ order.id }}</strong>.</p>
+    {# Conferma l'invio della mail all'indirizzo inserito nel form di checkout #}
     <p>Ti invieremo una email di conferma a <strong>{{ order.email }}</strong>.</p>
+    
+    {# Mostra un riepilogo rapido dell'ordine #}
+    <div class="card mx-auto mt-4" style="max-width: 500px;">
+        <div class="card-body">
+            <h5>Riepilogo ordine</h5>
+            <ul class="list-unstyled">
+                {% for item in order.items.all %}
+                    <li>{{ item.product.name }} x {{ item.quantity }} = {{ item.get_cost }} €</li>
+                {% endfor %}
+            </ul>
+            <hr>
+            <p><strong>Totale: {{ order.get_total_cost }} €</strong></p>
+            <p><small>
+                <strong>Metodo di pagamento:</strong> 
+                {% if order.payment_method == 'card' %}
+                    Con carta (pagato automaticamente)
+                {% else %}
+                    Alla consegna
+                {% endif %}
+            </small></p>
+        </div>
+    </div>
+    
     <div class="mt-4">
+        {# Link per vedere i dettagli dell'ordine appena fatto - funziona per tutti (loggati e ospiti) #}
         <a href="{% url 'shop:order_detail' order.id %}" class="btn btn-primary">
-            <i class="bi bi-eye"></i> Visualizza ordine
+            <i class="bi bi-eye"></i> Visualizza ordine completo
         </a>
+        {# Pulsante per riportare l'utente alla home e invogliarlo a nuovi acquisti #}
         <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
             <i class="bi bi-shop"></i> Continua lo shopping
         </a>

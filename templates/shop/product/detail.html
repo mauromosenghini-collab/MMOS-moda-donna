@@ -1,40 +1,48 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {# Estende lo scheletro comune definito in base.html #}
 {% load static %}
-
+{# Imposta il nome del prodotto come titolo della scheda del browser #}
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-6">
         {% if product.image %}
+        {# Visualizza l'immagine del prodotto con classi Bootstrap per renderla responsiva e gradevole #}
             <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
         {% else %}
+        {# Se l'immagine manca, mostra un riquadro grigio con un'icona segnaposto #}
             <div class="bg-secondary d-flex align-items-center justify-content-center rounded shadow" style="height: 400px;">
                 <i class="bi bi-image text-white" style="font-size: 5rem;"></i>
             </div>
         {% endif %}
     </div>
     <div class="col-md-6">
+        {# Visualizza la categoria di appartenenza #}
         <h1>{{ product.name }}</h1>
         <p class="text-muted">{{ product.category.name }}</p>
         <hr>
+        {# Prezzo evidenziato con la classe text-primary #}
         <p class="fs-4">
             <strong class="text-primary">{{ product.price }} €</strong>
         </p>
+        {# Descrizione dettagliata inserita nel pannello di amministrazione #}
         <p>{{ product.description }}</p>
-        
+        {# LOGICA DI VENDITA: Verifica se il prodotto è attivo e se c'è stock in magazzino #}
         {% if product.available and product.stock > 0 %}
             <p class="text-success">
                 <i class="bi bi-check-circle"></i> Disponibile ({{ product.stock }} pezzi)
             </p>
+            {# Form per inviare la richiesta alla view cart_add #}
             <form action="{% url 'shop:cart_add' product.id %}" method="post">
-                {% csrf_token %}
+                {% csrf_token %} {# Protezione obbligatoria per tutti i form POST in Django #}
+                {# Renderizza il form di aggiunta (quantità e override) come paragrafi #}
                 {{ cart_product_form.as_p }}
                 <button type="submit" class="btn btn-primary btn-lg mt-3">
                     <i class="bi bi-cart-plus"></i> Aggiungi al carrello
                 </button>
             </form>
         {% else %}
+            {# Se l'articolo è esaurito o non disponibile, disabilita l'acquisto #}
             <p class="text-danger">
                 <i class="bi bi-x-circle"></i> Non disponibile
             </p>
@@ -44,9 +52,11 @@
         {% endif %}
         
         <hr>
+        {# Pulsante rapido per tornare alla navigazione generale #}
         <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Torna ai prodotti
+            <i class="bi bi-arrow-left"></i> Torna alla vetrina
         </a>
     </div>
 </div>
 {% endblock %}
+

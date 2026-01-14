@@ -1,41 +1,43 @@
+/* Layout principale: assicura che il footer rimanga sempre in fondo alla pagina */
 body {
-    min-height: 100vh;
+    min-height: 100vh; /* Altezza minima pari a tutta la schermata */
     display: flex;
     flex-direction: column;
 }
-
+/* Fa sì che il contenuto principale occupi tutto lo spazio disponibile tra header e footer */
 main {
     flex: 1;
 }
-
+/* --- EFFETTI SULLE CARD (PRODOTTI) --- */
 .card {
-    transition: transform 0.2s;
+    transition: transform 0.2s; /* Rende il movimento fluido */
 }
-
+/* Sollevamento della card quando ci si passa sopra con il mouse */
 .card:hover {
     transform: translateY(-5px);
 }
-
+/* --- NAVIGAZIONE (NAVBAR) --- */
 .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
     letter-spacing: 0.5px;
-    color: #fff !important;
+    color: #fff !important; /* Forza il colore bianco */
 }
 
 .navbar-brand:hover {
     color: #f8f9fa !important;
 }
-
+/* Icona del carrello o etichette piccole */
 .badge {
     font-size: 0.75rem;
 }
-
+/* --- BOTTONI E TABELLE --- */
+/* Arrotonda gli angoli delle tabelle (es: nel carrello) */
 .table-responsive {
     border-radius: 0.375rem;
     overflow: hidden;
 }
-
+/* Effetto di ingrandimento leggero sui pulsanti al passaggio del mouse */
 .btn {
     transition: all 0.2s;
 }
@@ -43,7 +45,7 @@ main {
 .btn:hover {
     transform: scale(1.05);
 }
-
+/* Effetto zoom sull'immagine del prodotto quando si passa sulla card */
 .card-img-top {
     transition: transform 0.3s;
 }
@@ -51,26 +53,43 @@ main {
 .card:hover .card-img-top {
     transform: scale(1.05);
 }
-
-/* Cart styles */
+/* --- STILI SPECIFICI PER IL CARRELLO --- */
+/* Piccolo zoom sulla miniatura del prodotto nel carrello */
 .cart-item-image {
     transition: transform 0.2s;
 }
 
+
 .cart-item-image:hover {
     transform: scale(1.1);
 }
-
+/* Evidenzia la riga della tabella nel carrello al passaggio del mouse */
 .table-hover tbody tr:hover {
     background-color: #f8f9fa;
 }
-
+/* --- GESTIONE LAYOUT FISSO (STICKY) --- */
+/* Mantiene elementi (come il riepilogo ordine) visibili durante lo scorrimento */
 .sticky-top {
     z-index: 1020;
 }
+/* Responsive: sui dispositivi mobili (tablet/smartphone) disattiva la posizione fissa 
+   per evitare problemi di sovrapposizione o spazio */
 
 @media (max-width: 991px) {
     .sticky-top {
         position: relative !important;
     }
 }
+
+/* --- NOTE SUI CONCETTI CSS UTILIZZATI ---
+Flexbox (body e main): fondamentale nel web design. 
+Senza questo, se una pagina ha poco testo (come una pagina di "Grazie per l'acquisto"), 
+il footer salirebbe a metà schermo lasciando un brutto buco bianco sotto.
+
+Transizioni e Hover: danno all'utente un "feedback visivo". 
+Quando un prodotto si alza leggermente al passaggio del mouse, 
+l'utente capisce immediatamente che quell'elemento è cliccabile.
+
+Media Queries (@media): Responsive Design. 
+Assicura che lo shop sia bello e utilizzabile sia su un monitor da 27 pollici 
+che sullo schermo piccolo di uno smartphone. --- */

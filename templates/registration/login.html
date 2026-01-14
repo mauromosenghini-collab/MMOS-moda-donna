@@ -5,18 +5,25 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
+{# Centra il modulo di login orizzontalmente nella pagina #}
 <div class="row justify-content-center">
     <div class="col-md-6">
+        {# Utilizza una card con ombra (shadow) per far risaltare il modulo sul fondo #}
         <div class="card shadow">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">Login</h2>
+                {# Il form invia le credenziali al sistema di autenticazione di Django tramite POST #}
                 <form method="post">
+                    {# Misura di sicurezza fondamentale contro gli attacchi di tipo Cross-Site Request Forgery #}
                     {% csrf_token %}
+                    {# Renderizza automaticamente i campi del form (solitamente username e password) #}
                     {{ form|crispy }}
+                    {# Bottone di invio a larghezza intera (w-100) con icona Bootstrap #}
                     <button type="submit" class="btn btn-primary w-100 mt-3">
                         <i class="bi bi-box-arrow-in-right"></i> Accedi
                     </button>
                 </form>
+                {# Opzione per utenti che preferiscono non registrarsi, coerente con la tua scelta del "Checkout Ospite" #}
                 <p class="text-center mt-3">
                     Non hai un account? <a href="{% url 'shop:product_list' %}">Continua come ospite</a>
                 </p>
