@@ -12,6 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'price', 'available', 'stock', 'created', 'updated']
     list_filter = ['available', 'created', 'updated', 'category']
+    # Permette di modificare prezzo, disponibilità e scorte direttamente dalla lista, senza cliccare sul prodotto
     list_editable = ['price', 'available', 'stock']
     prepopulated_fields = {'slug': ('name',)}
 
