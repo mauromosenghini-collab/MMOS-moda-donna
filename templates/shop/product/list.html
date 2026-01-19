@@ -1,10 +1,11 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %}{# Eredita la struttura (navbar, footer) dal file base #}
+{% load static %}{# Necessario se dovessi richiamare immagini o file dalla cartella static #}
 {# Imposta il titolo della pagina in base alla categoria selezionata o "Vetrina" di default #}
 {% block title %}Vetrina{% endblock %}
 
 {% block content %}
 <div class="row">
+    {# --- COLONNA SINISTRA: MENU CATEGORIE --- #}
     <div class="col-md-3">
         <h3>Categorie</h3>
         <ul class="list-group">
@@ -15,7 +16,9 @@
                 </a>
             </li>
             {# Ciclo sulle categorie passate dalla View per creare il menu laterale #}
+            {# Ciclo dinamico: 'c' è la singola categoria estratta dalla lista 'categories' #}
             {% for c in categories %}
+            {# Se la categoria cliccata è quella attuale, Bootstrap aggiunge lo sfondo blu (active) #}
                 <li class="list-group-item {% if category.slug == c.slug %}active{% endif %}">
                     <a href="{{ c.get_absolute_url }}" class="text-decoration-none">
                         {{ c.name }}
@@ -24,21 +27,26 @@
             {% endfor %}
         </ul>
     </div>
+    {# --- COLONNA DESTRA: GRIGLIA PRODOTTI --- #}
     <div class="col-md-9">
+        {# Titolo che cambia in base al contesto (es. "Vetrina" oppure "Vestiti Estivi") #}
         {# Titolo dinamico: mostra il nome della categoria se filtrata, altrimenti "Vetrina" #}
         <h1>{% if category %}{{ category.name }}{% else %}Vetrina{% endif %}</h1>
         <div class="row">
             {# Cicla sulla lista di prodotti filtrati #}
             {% for product in products %}
                 <div class="col-md-4 mb-4">
+                    {# La classe shadow-sm aggiunge un'ombra leggera molto moderna #}
                     {# La classe h-100 assicura che tutte le card abbiano la stessa altezza nella riga #}
                     <div class="card h-100 shadow-sm">
                         <a href="{{ product.get_absolute_url }}">
                             {% if product.image %}
+                            {# Impostiamo un'altezza fissa (250px) così le card sono tutte uguali #}
                             {# object-fit: cover evita che le immagini vengano deformate se hanno proporzioni diverse #}
                                 <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
                             {% else %}
                             {# Placeholder se il prodotto non ha un'immagine caricata #}
+                            {# Se manca l'immagine, mostriamo un'icona centrata (Placeholder) #}
                                 <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
                                     <i class="bi bi-image text-white" style="font-size: 3rem;"></i>
                                 </div>
@@ -51,12 +59,15 @@
                                     {{ product.name }}
                                 </a>
                             </h5>
-                            {# truncatewords limita la descrizione per non sballare il layout della card #}
+                            {# truncatewords:15 taglia la descrizione se è troppo lunga per la card #}
+                            {# limita la descrizione per non sballare il layout della card #}
                             <p class="card-text text-muted">{{ product.description|truncatewords:15 }}</p>
+                            {# mt-auto spinge questo div in fondo alla card, indipendentemente dal testo sopra #}
                             <div class="mt-auto">
                                 <p class="card-text">
-                                    <strong class="text-primary fs-4">{{ product.price }} €</strong>
+                                    <strong class="text-primary fs-4">{{ product.price|floatformat:2 }} €</strong>
                                 </p>
+                                {# Logica di vendita: se il prodotto è esaurito o non disponibile, il tasto è grigio #}
                                 {# Controlla disponibilità e stock prima di mostrare il tasto Dettagli #}
                                 {% if product.available and product.stock > 0 %}
                                     <a href="{{ product.get_absolute_url }}" class="btn btn-primary w-100">
@@ -71,6 +82,7 @@
                         </div>
                     </div>
                 </div>
+                {# Gestione del caso "Database vuoto" #}
                 {# Se il database è vuoto o la categoria non ha prodotti, mostra questo messaggio #}
             {% empty %}
                 <div class="col-12">
