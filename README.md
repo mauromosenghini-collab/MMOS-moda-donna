@@ -1,6 +1,7 @@
 # E-commerce Django
 
 Un'applicazione e-commerce completa e funzionale sviluppata con Django, Python e Bootstrap 5. Il progetto gestisce l'intero ciclo di vendita: dalla navigazione dei prodotti alla gestione del carrello in sessione, fino alla creazione dell'ordine e al checkout (sia per utenti registrati che ospiti).
+Superuser: amministratore Email: amministratore@ecommerce.com Password:Projectecommerce
 
 ## Caratteristiche
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.forms import MediaDefiningClass
+from django.contrib.auth.models import User
 from .models import Category, Product, Cart, CartItem, Order, OrderItem
 
 # --- CLASSE BASE PERSONALIZZATA PER LAYOUT ADMIN ---
@@ -28,6 +29,8 @@ class ProductAdmin(CustomAdminMixin, admin.ModelAdmin):
     list_editable = ['price', 'available', 'stock']
     # Generazione automatica dello slug dal nome
     prepopulated_fields = {'slug': ('name',)}
+    # Ricerca per nome e descrizione
+    search_fields = ['name', 'description']
 
 # --- GESTIONE CARRELLO (Visualizzazione In-line) ---
 # TabularInline permette di vedere i prodotti nel carrello dentro la scheda del carrello stesso
@@ -70,6 +73,26 @@ class OrderAdmin(admin.ModelAdmin):
         updated_count = queryset.update(status='shipped')
         # Invia un messaggio di conferma all'amministratore
         self.message_user(request, f'Successo! {updated_count} ordini sono stati segnati come spediti.')
+
+# --- GESTIONE UTENTI (CLIENTI) CON ORDINI ---
+class OrderInline(admin.TabularInline):
+    model = Order
+    extra = 0
+    readonly_fields = ['id', 'first_name', 'last_name', 'email', 'paid', 'status', 'created', 'get_total_cost']
+    fields = ['id', 'first_name', 'last_name', 'email', 'paid', 'status', 'created', 'get_total_cost']
+    
+    def get_total_cost(self, obj):
+        return obj.get_total_cost()
+    get_total_cost.short_description = 'Total Cost'
+
+# Unregister the default User admin and register our custom one
+admin.site.unregister(User)
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined']
+    search_fields = ['username', 'email', 'first_name', 'last_name']
+    inlines = [OrderInline]
 
 #@admin.register: usare questa classe per gestire questo modello nell'admin.
 #list_editable: permette di fare "aggiornamenti di massa" (es. cambiare i prezzi) molto velocemente.
